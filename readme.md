@@ -1,4 +1,4 @@
-# BHL1750 MQTT client for raspberry pi
+# BH1750 MQTT client for raspberry pi
 
 ## Purpose of this project
 [BH1750](https://www.mouser.com/datasheet/2/348/bh1750fvi-e-186247.pdf?srsltid=AfmBOoqC7uAiZBA6RoouOt9ByvvPM5Sy5M-yFMTtI5dfTa2-e7MJFZq5) is a Light Sensor. The light sensor can be connected to a raspberry pi using the i2c interface. This MQTT client is publishing the LUX value of the [BH1750](https://www.mouser.com/datasheet/2/348/bh1750fvi-e-186247.pdf?srsltid=AfmBOoqC7uAiZBA6RoouOt9ByvvPM5Sy5M-yFMTtI5dfTa2-e7MJFZq5). The project is an addon to the [FullPageOS](https://github.com/guysoft/FullPageOS) [mqttBH1750Client](https://github.com/olialb/mqttBH1750Client) but works also totally independent.
