@@ -1,0 +1,6 @@
+    //bh1750 mqtt client configuration
+    Thing topic {name} "{name}" {{
+        Channels:
+			//bh1750 light sensor channels
+            Type number  : lux "lux"     					  [ stateTopic="{baseTopic}/{name}/lux" ]
+    }}
