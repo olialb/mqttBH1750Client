@@ -58,7 +58,7 @@ sudo systemctl stop mqttBH1750Client
 Adapt the ini file in section [[logging]](#section-logging) and enable *DEBUG* logging level. Than activate the virtual python environment and start the service by hand:
 ```bash
 source venv/bin/activate
-python mqttBH1750Client.py
+python mqtt_bh1750_client.py
 ```
 Check the logging output. After everything is fixed, set the logging level back to *ERROR*, deactivate the virtual environment and start the systemd service again with:
 ```bash
@@ -95,7 +95,9 @@ This is the main configuration section. This is the only section where you need 
 Configuration of the python logger which is used to log events
 
 * *level*= configuration of the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-  
+* *path=*" path to the log files
+* *file=*" filename of the log files. If empty, logging in files is disabled
+
 ## Exposed MQTT topics and usage
 
 The MQTT client is exposing the following topics:

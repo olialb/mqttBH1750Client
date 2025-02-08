@@ -51,7 +51,7 @@ echo "#########################################"
 echo "Fill templates"
 echo "#########################################"
 echo ""
-python openhabFillThingsTemplate.py 
+python fill_oh_things_template.py 
  
 echo "################################################"
 echo "Install systemd serice..."
