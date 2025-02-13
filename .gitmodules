@@ -1,0 +1,3 @@
+[submodule "baseMqttClient"]
+	path = baseMqttClient
+	url = https://github.com/olialb/baseMqttClient
