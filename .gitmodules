@@ -1,3 +1,4 @@
 [submodule "base_mqtt_client"]
 	path = base_mqtt_client
 	url = https://github.com/olialb/base_mqtt_client
+	branch = main
