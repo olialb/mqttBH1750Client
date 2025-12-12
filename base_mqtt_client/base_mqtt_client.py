@@ -70,6 +70,8 @@ class BaseMqttClient: #pylint: ...disable=too-many-instance-attributes
 
         # initialize logger
         self.log = logging.getLogger("MQTTClient")
+        self.log_level = None
+        self.log_file_handler = None
         logging.basicConfig()
 
         # topic configuration
@@ -87,11 +89,11 @@ class BaseMqttClient: #pylint: ...disable=too-many-instance-attributes
 
     def read_logging_config(self, config):
         """Read logging config from ini file"""
-        log_level = config["logging"]["level"]
-        if log_level.upper() in ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]:
-            self.log.setLevel(log_level.upper())
+        self.log_level = config["logging"]["level"]
+        if self.log_level.upper() in ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]:
+            self.log.setLevel(self.log_level.upper())
         else:
-            raise KeyError(log_level)
+            raise KeyError(self.log_level)
 
         #set default values
         log_file_path = LOG_FILE_PATH
@@ -113,22 +115,22 @@ class BaseMqttClient: #pylint: ...disable=too-many-instance-attributes
             try:
                 os.makedirs(log_file_path)
                 self.log.debug("Logging directory created: ./%s", log_file_path)
-
-                # create time rotating logger for log files
-                log_file_handler = logging.handlers.TimedRotatingFileHandler(
-                    os.path.join(log_file_path, log_file_name),
-                    when=log_file_rotate,
-                    backupCount=log_file_backup
-                )
-                # Set the formatter for the logging handler
-                log_file_handler.setFormatter(
-                    logging.Formatter("%(asctime)s-%(name)s-%(levelname)s-%(message)s")
-                )
-                self.log.addHandler(log_file_handler)
             except FileExistsError:
                 self.log.info("Logging directory exist already: ./%s", log_file_path)
             except OSError:
                 self.log.error("Can not create Logging directory: ./%s", log_file_path)
+    
+            # create time rotating logger for log files
+            self.log_file_handler = logging.handlers.TimedRotatingFileHandler(
+                os.path.join(log_file_path, log_file_name),
+                when=log_file_rotate,
+                backupCount=log_file_backup
+            )
+            # Set the formatter for the logging handler
+            self.log_file_handler.setFormatter(
+                logging.Formatter("%(asctime)s-%(name)s-%(levelname)s-%(message)s")
+            )
+            self.log.addHandler(self.log_file_handler)
 
     def read_config_file(self):
         """
@@ -313,6 +315,11 @@ class BaseMqttClient: #pylint: ...disable=too-many-instance-attributes
         this method must be implemented by the child class
         """
 
+    def publish_loop_callback(self):
+        """
+        This call back is called by publish loop and can be overwritten by child class
+        """
+
     def publish_loop(self):
         """
         endless main publish loop
@@ -330,6 +337,8 @@ class BaseMqttClient: #pylint: ...disable=too-many-instance-attributes
                 self.unpublished = False
                 # delay until next loo starts
                 time.sleep(self.publish_delay)
+                # call publish loop call back to allow child class to add additional cyclic stuff
+                self.publish_loop_callback()
                 # call time time tick of chrome pages
                 loop_counter += 1
                 if loop_counter > self.full_publish_cycle:
